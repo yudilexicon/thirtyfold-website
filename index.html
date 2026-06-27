@@ -700,6 +700,26 @@ section { position:relative }
   .footer-bottom { flex-direction:column; gap:12px; text-align:center }
 }
 
+/* ── Extra testimonials ── */
+.testi-more { display:none; margin-top:20px }
+.testi-more.open { display:grid }
+#view-all-btn { background:none; border:none; padding:0; cursor:pointer; font-family:inherit }
+#view-all-btn.open { opacity:.6 }
+
+/* ── Back to top ── */
+#back-top {
+  position:fixed; bottom:32px; right:32px; z-index:500;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--bg); border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 4px 20px rgba(27,36,68,.4);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; opacity:0; pointer-events:none;
+  transition:opacity .25s, transform .25s;
+}
+#back-top.show { opacity:1; pointer-events:all }
+#back-top:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(27,36,68,.5) }
+#back-top svg { width:16px; height:16px; stroke:rgba(255,255,255,.7); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round }
+
 /* ── Scroll reveal — class-driven, elements always visible without .vis ── */
 @keyframes slide-up {
   from { opacity:0; transform:translateY(12px) }
@@ -744,7 +764,6 @@ section { position:relative }
       <a href="#testi">Results</a>
     </div>
     <div class="nav-right">
-      <a href="#cta" class="btn btn-ghost" style="font-size:.58rem;padding:9px 18px">Learn More</a>
       <a href="#cta" class="btn btn-lime"  style="font-size:.58rem;padding:9px 18px">Free Audit →</a>
     </div>
   </div>
@@ -1061,7 +1080,7 @@ section { position:relative }
         <div class="sec-label lt">Early Results</div>
         <h2 class="testi-h2">Revenue Recovered.<br>Verified.</h2>
       </div>
-      <a href="#cta" class="btn btn-dark-outline" style="font-size:.6rem">View All Results →</a>
+      <button id="view-all-btn" class="btn btn-dark-outline" style="font-size:.6rem" aria-expanded="false">View All Results →</button>
     </div>
     <div class="testi-grid">
       <div class="testi-card">
@@ -1086,6 +1105,32 @@ section { position:relative }
             <span class="testi-role">Owner, CoolAir Solutions · Florida</span>
           </div>
           <div class="testi-badge">40% Response Rate</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-grid testi-more" id="testi-more" aria-hidden="true">
+      <div class="testi-card">
+        <div class="testi-mark">"</div>
+        <p class="testi-text">We used to lose half our weekend inquiries because nobody was around to respond. Now the AI handles it instantly. Last month alone it booked four jobs we would have never seen until Monday—by which point those leads had already called someone else.</p>
+        <div class="testi-author">
+          <div class="testi-av">JT</div>
+          <div>
+            <span class="testi-name">James T.</span>
+            <span class="testi-role">Owner, Apex Plumbing · Arizona</span>
+          </div>
+          <div class="testi-badge">+4 Jobs / Weekend</div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-mark">"</div>
+        <p class="testi-text">Our response rate went from single digits to over 35% in the first two weeks. The AI qualifies each lead before it ever reaches my team—so when they do pick up the phone, it's a warm conversation, not a cold pitch.</p>
+        <div class="testi-author">
+          <div class="testi-av">SR</div>
+          <div>
+            <span class="testi-name">Sarah R.</span>
+            <span class="testi-role">GM, Comfort Zone HVAC · Georgia</span>
+          </div>
+          <div class="testi-badge">35% Response Rate</div>
         </div>
       </div>
     </div>
@@ -1137,7 +1182,7 @@ section { position:relative }
       <div>
         <div class="footer-col-hd">Contact</div>
         <ul class="footer-links">
-          <li><a href="mailto:yudi.lexicon@gmail.com">yudi.lexicon@gmail.com</a></li>
+          <li><a href="mailto:hello@thirtyfoldstudio.com">hello@thirtyfoldstudio.com</a></li>
           <li><a href="#cta">Book a Call</a></li>
         </ul>
         <div style="margin-top:24px">
@@ -1151,6 +1196,10 @@ section { position:relative }
     </div>
   </div>
 </footer>
+
+<button id="back-top" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
 
 <script>
 // ── Ripple cleanup ──
@@ -1252,6 +1301,31 @@ roTargets.forEach(el => ro.observe(el));
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+})();
+
+// ── View all testimonials ──
+(function() {
+  const btn  = document.getElementById('view-all-btn');
+  const more = document.getElementById('testi-more');
+  if (!btn || !more) return;
+  btn.addEventListener('click', () => {
+    const open = more.classList.toggle('open');
+    more.setAttribute('aria-hidden', String(!open));
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? 'Show Less ↑' : 'View All Results →';
+    btn.classList.toggle('open', open);
+  });
+})();
+
+// ── Back to top ──
+(function() {
+  const btn = document.getElementById('back-top');
+  if (!btn) return;
+  const threshold = () => document.documentElement.scrollHeight / 2;
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('show', window.scrollY > threshold());
+  }, { passive: true });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 })();
 </script>
 </body>
